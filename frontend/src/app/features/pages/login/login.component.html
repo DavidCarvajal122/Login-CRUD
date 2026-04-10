@@ -1,0 +1,62 @@
+<main class="login-page">
+  <section class="login-section" aria-labelledby="login-title">
+    <header class="login-header">
+      <h1 id="login-title">Iniciar sesión</h1>
+      <p>Ingresa tus credenciales para acceder al sistema.</p>
+    </header>
+
+    <p *ngIf="errorMessage" class="alert alert-error" role="alert" aria-live="polite">
+      {{ errorMessage }}
+    </p>
+
+    <p *ngIf="successMessage" class="alert alert-success" role="status" aria-live="polite">
+      {{ successMessage }}
+    </p>
+
+    <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input
+          id="correo"
+          name="correo"
+          type="email"
+          [(ngModel)]="credentials.correo"
+          #correoField="ngModel"
+          placeholder="ejemplo@correo.com"
+          required
+          email
+          autocomplete="username"
+        />
+
+        <small *ngIf="correoField.invalid && correoField.touched" class="field-error">
+          Ingresa un correo válido.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="contrasena">Contraseña</label>
+        <input
+          id="contrasena"
+          name="contrasena"
+          type="password"
+          [(ngModel)]="credentials.contrasena"
+          #passwordField="ngModel"
+          placeholder="Ingresa tu contraseña"
+          required
+          minlength="6"
+          autocomplete="current-password"
+        />
+
+        <small *ngIf="passwordField.invalid && passwordField.touched" class="field-error">
+          La contraseña es obligatoria y debe tener al menos 6 caracteres.
+        </small>
+      </div>
+
+      <footer class="form-actions">
+        <button type="submit" [disabled]="loginForm.invalid || loading">
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+      </footer>
+    </form>
+  </section>
+</main>

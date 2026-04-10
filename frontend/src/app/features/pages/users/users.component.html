@@ -1,0 +1,119 @@
+<main class="users-page">
+  <section class="users-section" aria-labelledby="users-title">
+    <header class="users-header">
+      <div>
+        <h1 id="users-title">Gestión de usuarios</h1>
+        <p>Sección protegida con operaciones CRUD básicas.</p>
+      </div>
+
+      <button type="button" class="logout-button" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <p *ngIf="errorMessage" class="alert alert-error" role="alert" aria-live="polite">
+      {{ errorMessage }}
+    </p>
+
+    <p *ngIf="successMessage" class="alert alert-success" role="status" aria-live="polite">
+      {{ successMessage }}
+    </p>
+
+    <section class="card" aria-labelledby="form-title">
+      <h2 id="form-title">
+        {{ editingUserId !== null ? 'Editar usuario' : 'Crear usuario' }}
+      </h2>
+
+      <form class="user-form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            [(ngModel)]="formData.nombre"
+            placeholder="Ingresa el nombre"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo electrónico</label>
+          <input
+            id="correo"
+            name="correo"
+            type="email"
+            [(ngModel)]="formData.correo"
+            placeholder="Ingresa el correo"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="contrasena">
+            {{ editingUserId !== null ? 'Contraseña (opcional, no se actualiza)' : 'Contraseña' }}
+          </label>
+          <input
+            id="contrasena"
+            name="contrasena"
+            type="password"
+            [(ngModel)]="formData.contrasena"
+            placeholder="Ingresa la contraseña"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="loading">
+            {{ editingUserId !== null ? 'Actualizar' : 'Guardar' }}
+          </button>
+
+          <button
+            *ngIf="editingUserId !== null"
+            type="button"
+            class="secondary-button"
+            (click)="cancelEdit()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="list-title">
+      <h2 id="list-title">Lista de usuarios</h2>
+
+      <p *ngIf="loading">Cargando información...</p>
+
+      <div class="table-wrapper" *ngIf="!loading">
+        <table *ngIf="users.length > 0; else emptyState">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.id }}</td>
+              <td>{{ user.nombre }}</td>
+              <td>{{ user.correo }}</td>
+              <td class="actions">
+                <button type="button" class="edit-button" (click)="editUser(user)">
+                  Editar
+                </button>
+                <button type="button" class="delete-button" (click)="deleteUser(user.id)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ng-template #emptyState>
+          <p>No hay usuarios registrados.</p>
+        </ng-template>
+      </div>
+    </section>
+  </section>
+</main>
