@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlanService {
-  private base = 'http://localhost:3000/api';
+  private base = 'https://login-crud-m5ez.onrender.com/api';
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
