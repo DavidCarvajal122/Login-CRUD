@@ -10,7 +10,7 @@ import { LoginResponse } from '../../features/auth/models/login-response.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'https://login-crud-m5ez.onrender.com/api/auth';
   private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) {}
