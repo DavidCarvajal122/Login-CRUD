@@ -1,0 +1,154 @@
+<main class="planes-page">
+  <section class="planes-section">
+
+    <header class="planes-header">
+      <div>
+        <h1>Gestión de Planes</h1>
+        <p>Crea, edita y elimina planes del sistema.</p>
+      </div>
+      <nav class="nav-links">
+        <a routerLink="/users" routerLinkActive="active">Usuarios</a>
+        <a routerLink="/planes" routerLinkActive="active">Planes</a>
+        <button type="button" class="logout-button" (click)="logout()">Cerrar sesión</button>
+      </nav>
+    </header>
+
+    <!-- Alertas -->
+    <p *ngIf="errorMessage" class="alert alert-error" role="alert">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</p>
+
+    <!-- Formulario -->
+    <section class="card">
+      <h2>{{ editingId !== null ? 'Editar plan' : 'Crear plan' }}</h2>
+      <form class="plan-form" (ngSubmit)="onSubmit()">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">Nombre del plan</label>
+            <input id="nombre" name="nombre" type="text"
+              [(ngModel)]="formData.nombre" placeholder="Ingresa el nombre" />
+          </div>
+          <div class="form-group">
+            <label for="id_categoria">Categoría</label>
+            <select id="id_categoria" name="id_categoria" [(ngModel)]="formData.id_categoria">
+              <option value="">— Seleccionar —</option>
+              <option *ngFor="let c of categorias" [value]="c.id">{{ c.nombre }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3"
+            [(ngModel)]="formData.descripcion" placeholder="Describe el plan"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="presupuesto_min">Presupuesto mínimo ($)</label>
+            <input id="presupuesto_min" name="presupuesto_min" type="number" min="0" step="0.01"
+              [(ngModel)]="formData.presupuesto_min" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label for="presupuesto_max">Presupuesto máximo ($)</label>
+            <input id="presupuesto_max" name="presupuesto_max" type="number" min="0" step="0.01"
+              [(ngModel)]="formData.presupuesto_max" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id_tipo_compania">Tipo de compañía</label>
+            <select id="id_tipo_compania" name="id_tipo_compania" [(ngModel)]="formData.id_tipo_compania">
+              <option value="">— Seleccionar —</option>
+              <option *ngFor="let t of tiposCompania" [value]="t.id">{{ t.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="id_pais">País</label>
+            <select id="id_pais" name="id_pais" [(ngModel)]="formData.id_pais" (change)="onPaisChange()">
+              <option value="">— Seleccionar —</option>
+              <option *ngFor="let p of paises" [value]="p.id">{{ p.nombre }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id_provincia">Provincia</label>
+            <select id="id_provincia" name="id_provincia"
+              [(ngModel)]="formData.id_provincia" (change)="onProvinciaChange()"
+              [disabled]="!formData.id_pais">
+              <option value="">— Seleccionar —</option>
+              <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="id_ciudad">Ciudad</label>
+            <select id="id_ciudad" name="id_ciudad"
+              [(ngModel)]="formData.id_ciudad"
+              [disabled]="!formData.id_provincia">
+              <option value="">— Seleccionar —</option>
+              <option *ngFor="let c of ciudades" [value]="c.id">{{ c.nombre }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" name="privacidad" [(ngModel)]="formData.privacidad" />
+            Plan privado
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="loading">
+            {{ editingId !== null ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button *ngIf="editingId !== null" type="button"
+            class="secondary-button" (click)="cancelEdit()">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Tabla -->
+    <section class="card">
+      <h2>Planes registrados</h2>
+      <p *ngIf="loading">Cargando planes...</p>
+      <div class="table-wrapper" *ngIf="!loading">
+        <table *ngIf="planes.length > 0; else empty">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Tipo</th>
+              <th>Presupuesto</th>
+              <th>Ciudad</th>
+              <th>Privado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let plan of planes">
+              <td>{{ plan.nombre }}</td>
+              <td>{{ plan.categoria || getNombreCategoria(plan.id_categoria) }}</td>
+              <td>{{ plan.tipo_compania || getNombreTipo(plan.id_tipo_compania) }}</td>
+              <td>${{ plan.presupuesto_min }} – ${{ plan.presupuesto_max }}</td>
+              <td>{{ plan.ciudad || '—' }}</td>
+              <td>{{ plan.privacidad ? 'Sí' : 'No' }}</td>
+              <td class="actions">
+                <button type="button" class="edit-button" (click)="editPlan(plan)">Editar</button>
+                <button type="button" class="delete-button" (click)="deletePlan(plan.id)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #empty><p>No hay planes registrados.</p></ng-template>
+      </div>
+    </section>
+
+  </section>
+</main>

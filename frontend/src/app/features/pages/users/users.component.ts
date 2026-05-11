@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +11,7 @@ import { User } from '../../auth/models/user.model';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })

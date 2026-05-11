@@ -5,10 +5,11 @@
         <h1 id="users-title">Gestión de usuarios</h1>
         <p>Sección protegida con operaciones CRUD básicas.</p>
       </div>
-
-      <button type="button" class="logout-button" (click)="logout()">
-        Cerrar sesión
-      </button>
+      <nav class="nav-links">
+        <a routerLink="/users" routerLinkActive="active">Usuarios</a>
+        <a routerLink="/planes" routerLinkActive="active">Planes</a>
+        <button type="button" class="logout-button" (click)="logout()">Cerrar sesión</button>
+      </nav>
     </header>
 
     <p *ngIf="errorMessage" class="alert alert-error" role="alert" aria-live="polite">
