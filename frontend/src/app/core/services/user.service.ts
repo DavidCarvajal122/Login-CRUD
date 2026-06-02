@@ -9,7 +9,9 @@ import { User } from '../../features/auth/models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://login-crud-m5ez.onrender.com/api/users';
+  //private apiUrl = 'https://login-crud-m5ez.onrender.com/api/users';
+  private apiUrl = 'http://localhost:3000/api/users';
+
 
   constructor(
     private http: HttpClient,

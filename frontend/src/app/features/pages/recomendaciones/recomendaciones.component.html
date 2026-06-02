@@ -1,0 +1,162 @@
+<main class="rec-page">
+  <section class="rec-section">
+
+    <!-- Header -->
+    <header class="rec-header">
+      <div>
+        <h1>Selector de Planes</h1>
+        <p>Encuentra el plan perfecto según tus preferencias</p>
+      </div>
+      <nav class="nav-links">
+        <a routerLink="/users"           routerLinkActive="active">Usuarios</a>
+        <a routerLink="/planes"          routerLinkActive="active">Planes</a>
+        <a routerLink="/recomendaciones" routerLinkActive="active">Recomendaciones</a>
+        <button type="button" class="logout-button" (click)="logout()">Cerrar sesión</button>
+      </nav>
+    </header>
+
+    <div class="rec-layout">
+
+      <!-- Panel izquierdo: Preferencias -->
+      <aside class="panel-preferencias">
+        <h2>Mis Preferencias</h2>
+        <p class="panel-subtitle">Configura tu búsqueda</p>
+
+        <p *ngIf="errorMessage" class="alert-error">{{ errorMessage }}</p>
+
+        <!-- Presupuesto -->
+        <div class="form-group">
+          <label>Presupuesto mínimo ($)</label>
+          <input type="number" min="0" step="0.01"
+            [(ngModel)]="preferencias.presupuesto_min"
+            placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Presupuesto máximo ($)</label>
+          <input type="number" min="0" step="0.01"
+            [(ngModel)]="preferencias.presupuesto_max"
+            placeholder="0.00" />
+        </div>
+
+        <!-- Tipo de compañía -->
+        <div class="form-group">
+          <label>Tipo de compañía</label>
+          <select [(ngModel)]="preferencias.id_tipo_compania">
+            <option value="">— Cualquiera —</option>
+            <option *ngFor="let t of tiposCompania" [value]="t.id">{{ t.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- Categorías -->
+        <div class="form-group">
+          <label>Categorías de interés</label>
+          <div class="checkboxes">
+            <label *ngFor="let c of categorias" class="checkbox-item"
+              [class.selected]="isCategoriaSeleccionada(c.id)"
+              (click)="toggleCategoria(c.id)">
+              <span>{{ c.nombre }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Privacidad -->
+        <div class="form-group">
+          <label>Tipo de plan</label>
+          <select [(ngModel)]="preferencias.privacidad">
+            <option [ngValue]="false">Público</option>
+            <option [ngValue]="true">Privado</option>
+          </select>
+        </div>
+
+        <!-- Origen -->
+        <div class="form-group">
+          <label>Origen del plan</label>
+          <select [(ngModel)]="preferencias.origen">
+            <option value="todos">Todos los planes</option>
+            <option value="propio">Solo mis planes</option>
+          </select>
+        </div>
+
+        <!-- Botones -->
+        <button class="btn-generar" (click)="generar()" [disabled]="loading">
+          {{ loading ? 'Buscando...' : 'Generar recomendaciones' }}
+        </button>
+        <button class="btn-limpiar" (click)="limpiar()" [disabled]="loading">
+          Limpiar filtros
+        </button>
+      </aside>
+
+      <!-- Panel derecho: Resultados -->
+      <section class="panel-resultados">
+
+        <!-- Estado inicial -->
+        <div *ngIf="!buscado && !loading" class="estado-inicial">
+          <div class="estado-icono">🔍</div>
+          <h3>Configura tus preferencias</h3>
+          <p>Ingresa tu presupuesto y preferencias para encontrar los planes más compatibles contigo.</p>
+        </div>
+
+        <!-- Cargando -->
+        <div *ngIf="loading" class="estado-inicial">
+          <div class="estado-icono">⏳</div>
+          <h3>Buscando planes...</h3>
+        </div>
+
+        <!-- Sin resultados -->
+        <div *ngIf="buscado && recomendaciones.length === 0" class="estado-inicial">
+          <div class="estado-icono">😕</div>
+          <h3>No se encontraron planes</h3>
+          <p>Intenta ajustar tus preferencias para obtener más resultados.</p>
+          <button class="btn-limpiar" (click)="limpiar()">Limpiar filtros</button>
+        </div>
+
+        <!-- Resultados -->
+        <div *ngIf="buscado && recomendaciones.length > 0">
+          <div class="resultados-header">
+            <h2>Planes recomendados</h2>
+            <span class="total-badge">{{ recomendaciones.length }} resultados</span>
+          </div>
+
+          <div class="tarjetas-grid">
+            <div *ngFor="let plan of recomendaciones; let i = index" class="tarjeta">
+
+              <!-- Badge de compatibilidad -->
+              <div class="tarjeta-top">
+                <span class="posicion">#{{ i + 1 }}</span>
+                <span class="badge" [ngClass]="getBadgeClass(plan.porcentaje_compatibilidad)">
+                  {{ plan.porcentaje_compatibilidad }}% compatible
+                </span>
+              </div>
+
+              <h3 class="tarjeta-titulo">{{ plan.nombre }}</h3>
+              <p class="tarjeta-desc">{{ plan.descripcion }}</p>
+
+              <div class="tarjeta-info">
+                <span>💰 ${{ plan.presupuesto_min }} – ${{ plan.presupuesto_max }}</span>
+                <span>🏷️ {{ plan.categoria }}</span>
+                <span>👥 {{ plan.tipo_compania }}</span>
+                <span *ngIf="plan.ciudad">📍 {{ plan.ciudad }}</span>
+              </div>
+
+              <!-- Detalle de puntaje -->
+              <details class="detalle-puntaje">
+                <summary>Ver detalle del puntaje</summary>
+                <ul>
+                  <li>{{ plan.detalle_puntaje.presupuesto }}</li>
+                  <li>{{ plan.detalle_puntaje.tipo_compania }}</li>
+                  <li>{{ plan.detalle_puntaje.categorias }}</li>
+                  <li>{{ plan.detalle_puntaje.privacidad }}</li>
+                  <li>{{ plan.detalle_puntaje.origen }}</li>
+                </ul>
+              </details>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+  </section>
+</main>

@@ -96,4 +96,4 @@ Abrir http://localhost:4200
 Autor
 
 David Carvajal 
-Estudiante de Ingeniería de Software
+Estudiante de Ingeniería de Software                      
