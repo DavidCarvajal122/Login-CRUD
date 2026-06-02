@@ -95,19 +95,20 @@ export class RecomendacionesComponent implements OnInit {
       origen:           this.preferencias.origen
     };
 
-    this.http.post<any>('http://localhost:3000/api/recomendaciones', body, { headers })
+    this.http
+      .post<any>('https://login-crud-m5ez.onrender.com/api/recomendaciones', body, { headers })
       .subscribe({
-        next: res => {
+        next: (res) => {
           console.log('Respuesta:', res);
           this.recomendaciones = res.recomendaciones;
           this.loading = false;
           this.buscado = true;
           this.cdr.detectChanges();
         },
-        error: err => {
+        error: (err) => {
           this.errorMessage = err?.error?.message || 'Error al generar recomendaciones';
           this.loading = false;
-        }
+        },
       });
   }
 
