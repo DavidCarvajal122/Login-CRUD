@@ -31,6 +31,7 @@ export class PlanesComponent implements OnInit {
   loading       = false;
   errorMessage  = '';
   successMessage = '';
+  isAdmin = false;
 
   constructor(
     private planService: PlanService,
@@ -39,6 +40,7 @@ export class PlanesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
     this.loadAll();
   }
 

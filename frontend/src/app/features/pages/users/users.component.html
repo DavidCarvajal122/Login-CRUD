@@ -6,8 +6,8 @@
         <p>Sección protegida con operaciones CRUD básicas.</p>
       </div>
       <nav class="nav-links">
-        <a routerLink="/users" routerLinkActive="active">Usuarios</a>
-        <a routerLink="/planes" routerLinkActive="active">Planes</a>
+        <a *ngIf="isAdmin" routerLink="/users" routerLinkActive="active">Usuarios</a>
+        <a *ngIf="isAdmin" routerLink="/planes" routerLinkActive="active">Planes</a>
         <a routerLink="/recomendaciones" routerLinkActive="active">Recomendaciones</a>
         <button type="button" class="logout-button" (click)="logout()">Cerrar sesión</button>
       </nav>

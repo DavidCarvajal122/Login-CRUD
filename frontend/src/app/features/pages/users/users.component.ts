@@ -29,6 +29,7 @@ export class UsersComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   loading: boolean = false;
+  isAdmin = false; 
 
   constructor(
     private userService: UserService,
@@ -37,6 +38,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
     this.loadUsers();
   }
 

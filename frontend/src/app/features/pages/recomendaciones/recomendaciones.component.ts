@@ -37,6 +37,7 @@ export class RecomendacionesComponent implements OnInit {
   buscado        = false;
   loading        = false;
   errorMessage   = '';
+  isAdmin = false;
 
   constructor(
     private http: HttpClient,
@@ -47,6 +48,7 @@ export class RecomendacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
     this.planService.getCategorias().subscribe({ next: d => this.categorias = d });
     this.planService.getTiposCompania().subscribe({ next: d => this.tiposCompania = d });
   }
