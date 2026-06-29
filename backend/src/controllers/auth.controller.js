@@ -81,7 +81,8 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        correo: user.correo
+        correo: user.correo,
+        rol: user.rol        // ← AGREGADO
       },
       process.env.JWT_SECRET,
       { expiresIn: '2h' }
@@ -93,7 +94,8 @@ const login = async (req, res) => {
       user: {
         id: user.id,
         nombre: user.nombre,
-        correo: user.correo
+        correo: user.correo,
+        rol: user.rol        // ← AGREGADO
       }
     });
   } catch (error) {

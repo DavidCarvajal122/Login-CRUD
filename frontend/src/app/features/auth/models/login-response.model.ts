@@ -16,5 +16,7 @@ export interface LoginResponse {
 
     // Correo del usuario
     correo: string;
+
+    rol: string;
   };
 }

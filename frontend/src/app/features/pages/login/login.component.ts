@@ -31,7 +31,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/users']);
+      if (this.authService.isAdmin()) {
+        this.router.navigate(['/users']);
+      } else {
+        this.router.navigate(['/recomendaciones']);
+      }
       return;
     }
 
@@ -59,7 +63,11 @@ export class LoginComponent implements OnInit {
         this.successMessage = response.message;
         this.loading = false;
 
-        this.router.navigate(['/users']);
+        if (response.user.rol === 'admin') {
+          this.router.navigate(['/users']);
+        } else {
+          this.router.navigate(['/recomendaciones']);
+        }
       },
       error: (error) => {
         this.loading = false;

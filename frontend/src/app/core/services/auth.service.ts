@@ -11,7 +11,6 @@ import { LoginResponse } from '../../features/auth/models/login-response.model';
 })
 export class AuthService {
   private apiUrl = 'https://login-crud-m5ez.onrender.com/api/auth';
-  //private apiUrl = 'http://localhost:3000/api/auth';
   private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) {}
@@ -30,7 +29,6 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('token');
     }
-
     return null;
   }
 
@@ -45,8 +43,21 @@ export class AuthService {
       const user = localStorage.getItem('user');
       return user ? JSON.parse(user) : null;
     }
-
     return null;
+  }
+
+  getRol(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      const user = localStorage.getItem('user');
+      if (user) {
+        return JSON.parse(user).rol;
+      }
+    }
+    return null;
+  }
+
+  isAdmin(): boolean {
+    return this.getRol() === 'admin';
   }
 
   isLoggedIn(): boolean {
